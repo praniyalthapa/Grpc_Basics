@@ -1,10 +1,11 @@
 syntax = "proto3"; //it assumes whole file is going to follow latest proto buffer version that is proto3
 //it can even make api contract
 service TodoService{
-  rpc Create(Todo) returns (Todo) {}
-  rpc Get(TodoRequest) returns (Todo) {}
-  rpc List() returns (TodoList) {} 
+  rpc Create (Todo) returns (Todo) {}
+  rpc Get (TodoRequest) returns (Todo) {}
+  rpc List (Empty) returns (TodoList) {} 
 }
+message Empty {}
 message Todo{ //either send or receive an api
      string id=1;
      string title=2;
@@ -17,5 +18,5 @@ message TodoList{
 
 }
 message TodoRequest{
-  string id=1;
+ optional string id=1;
 }
