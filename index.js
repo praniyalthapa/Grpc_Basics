@@ -25,7 +25,18 @@ server.addService(todoProto.TodoService.service,{ //using todo proto u can use i
          callback(null,newTodo);  //sending created object back to the client
     },
     GetTodo:(call,callback)=>{
-      let incommingId=call.request.TodoRequest
+      let incommingRequest=call.request; //this will give you whole TodoRequest object
+      let todoId=incommingRequest.id;   //getting id from the request
+      const response=todos.filter((todo)=>{
+        if(response.length>0){
+            callback(null,response);
+        }
+        else{
+            callback({
+                message:'Todo is not found sorry!'
+            },null);
+        }
+      })
     }
 
 
