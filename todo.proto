@@ -1,9 +1,9 @@
 syntax = "proto3"; //it assumes whole file is going to follow latest proto buffer version that is proto3
 //it can even make api contract
 service TodoService{
-  rpc Create (Todo) returns (Todo) {}
-  rpc Get (TodoRequest) returns (Todo) {}
-  rpc List (Empty) returns (TodoList) {} 
+  rpc CreateTodo (Todo) returns (Todo) {}
+  rpc GetTodo (TodoRequest) returns (Todo) {}
+  rpc ListTodo (Empty) returns (TodoList) {} 
 }
 message Empty {}
 message Todo{ //either send or receive an api
@@ -14,9 +14,10 @@ message Todo{ //either send or receive an api
 }
 message TodoList{
    repeated Todo todos=1; //repeated means like an array a lot of todos maybe comming..
-  
+   
 
 }
 message TodoRequest{
  optional string id=1;
+
 }
