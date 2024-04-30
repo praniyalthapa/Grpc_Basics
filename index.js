@@ -8,6 +8,9 @@ const packageDefinition=protoLoader.loadSync('./todo.proto',{
     defaults: true,
     oneofs: true
 });
+const protoDescriptor=grpc.loadPackageDefinition(packageDefinition);
+var todoService=protoDescriptor.TodoService;
+
 
 
 const server=new grpc.Server();
@@ -21,7 +24,7 @@ const todos=[
     }
 
 ];
-server.addService(todoProto.TodoService.service,{ //using todo proto u can use its services
+server.addService(todoService.service,{ //using todo proto u can use its services
     ListTodo:(call,callback)=>{        
         callback(null,todos);      //sendinng data to client side where erro is null
         
@@ -32,23 +35,26 @@ server.addService(todoProto.TodoService.service,{ //using todo proto u can use i
         callback(null,todos); //sending created object back to the client
         
     },
-    GetTodo:(call,callback)=>{
-      let incommingRequest=call.request; //this will give you whole TodoRequest object
-      let todoId=incommingRequest.id;   //getting id from the request
-      const response=todos.filter((todo)=>{
-        if(response.length>0){
-            callback(null,response);
+    GetTodo: (call, callback) => {
+        let incomingRequest = call.request; // this will give you the whole TodoRequest object
+        let todoId = incomingRequest.id; // getting id from the request
+
+        const response = todos.filter((todo) => {
+            return todo.id === todoId;
+        });
+
+        if (response.length > 0) {
+            callback(null, response); // Send the matching todo item(s) as response
+        } else {
+            callback({ message: 'Todo is not found sorry!' }, null); // Send error if todo is not found
         }
-        else{
-            callback({
-                message:'Todo is not found sorry!'
-            },null);
-        }
-      })
     }
+});
+
+server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    console.log('Server started'); // Log that the server has started
+   // server.start();
 
 
 }); 
-server.bind('127.0.0.1:50051',grpc.ServerCredentials.createInsecure()); //binding our server with ip 
-console.log('server started');
-server.start();
+
