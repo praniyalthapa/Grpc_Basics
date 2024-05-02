@@ -26,12 +26,15 @@ const todos=[
 ];
 server.addService(todoService.service,{ //using todo proto u can use its services
     ListTodo:(call,callback)=>{        
-        callback(null,todos);      //sendinng data to client side where erro is null
+        callback(null,{
+            todos:todos;
+        });      //sendinng data to client side where erro is null
         
     },
     CreateTodo :(call,callback)=>{
          let newTodo=call.request;
          todos.push(newTodo);
+         console.log(todos);
         callback(null,todos); //sending created object back to the client
         
     },
